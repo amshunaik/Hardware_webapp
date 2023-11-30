@@ -1,6 +1,6 @@
 
 
-import React ,{useState,useRef} from 'react';
+import React ,{useState,useRef, useEffect} from 'react';
 import './File1.css'
 function App(){
     const inputref=useRef();
@@ -53,9 +53,18 @@ function App(){
 
 
     }
-    const handDelete=()=>{
-        setsol(null)
+    const handDelete=async ()=>{
+        
+            const response = await fetch('http://localhost:5000/delete');
+            const data = await response.json();
+            console.log(data.message);
+            
+            setsol(null);
     }
+    useEffect(()=>{
+        setsol(null);
+
+    },[sol])
      const downloadFile =async(filename)=> {
         try {
           const response = await fetch(`http://localhost:5000/download?filename=${filename}`);
@@ -101,14 +110,27 @@ function App(){
                     <button className='run' onClick={handleresult}> Run</button>
                     <div className='div5'>
                         
-                    <h1>Result </h1>{sol===null&&clk==true?<h2>Compiling....</h2>:<h2>File generated : {sol[0]}</h2>}
+                    <h1>Result </h1>{sol===null&&clk==true?<h2>Compiling....</h2>:<h2>File generated : {sol}</h2>}
                     </div>
 
                     <div className='b1'>
                     <button className='but1'onClick={()=>downloadFile('fsm1.txt')}>Download File 1</button>
-                    <button className='but1'onclick={downloadFile('fsm2.txt')}>Download File 2</button>
+                    <button className='but1'onClick={()=>downloadFile('fsm2.txt')}>Download File 2</button>
                     </div>
-                    <button onClick={handDelete}>Clear</button>
+                    <button onClick={handDelete} className='clear'>Clear</button>
+                    <div className='div7'>
+                        <h2>Instructions to be followed :</h2>
+                        <ul>
+                            <li>First upload and submit a ".v" file, then do same for ".cpp" file</li>
+                            <li>After submitting wait for 10-15 sec then press "Run" button</li>
+                            <li>Then the name of files generated will be visible to you</li>
+                            <li>Then press "Download" button , to download the output file.</li>
+                            <li><b>Then press "clear" button befor uploading new set of file</b></li>
+
+                        </ul>
+                        <h4>"Clear button" is to delete the previous uploaded files </h4>
+
+                    </div>
                     
 
                     
